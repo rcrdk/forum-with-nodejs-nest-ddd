@@ -33,6 +33,7 @@
 		"@nestjs/platform-express": "^10.0.0",
 		"@prisma/client": "5.19.1",
 		"bcryptjs": "2.4.3",
+		"dayjs": "1.11.13",
 		"passport-jwt": "4.0.1",
 		"reflect-metadata": "^0.2.0",
 		"rxjs": "^7.8.1",
@@ -41,10 +42,11 @@
 		"zod-validation-error": "3.4.0"
 	},
 	"devDependencies": {
+		"@faker-js/faker": "9.0.0",
 		"@nestjs/cli": "^10.0.0",
 		"@nestjs/schematics": "^10.0.0",
 		"@nestjs/testing": "^10.0.0",
-		"@rocketseat/eslint-config": "^2.2.2",
+		"@rocketseat/eslint-config": "2.2.2",
 		"@swc/cli": "0.4.0",
 		"@swc/core": "1.7.26",
 		"@types/bcryptjs": "2.4.6",
