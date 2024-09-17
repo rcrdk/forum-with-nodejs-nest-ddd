@@ -10,8 +10,10 @@ export default defineConfig({
 		}),
 	],
 	test: {
+		include: ['**/*.e2e-spec.ts'],
 		globals: true,
 		dir: 'src',
 		root: './',
+		setupFiles: ['./test/setup-e2e.ts'],
 	},
 })
