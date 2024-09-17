@@ -18,5 +18,20 @@ I developed this project during my latest studies on Node lessons at [Rocketseat
 ```zsh
 npm i
 docker compose up -d
-```
 
+# Fill up enviroment variables
+```
+ß
+<!--
+	💡 **Tip:** Use ChatGPT:
+	- Private and public keys: "How to generate RS256 private and public keys on [YOUR OS]"
+	- Convert generated keys to base64: "How to convert file contents to base64 on [YOUR OS]"
+-->
+
+<!-- 🖥️ MacOS: -->
+<!-- Generate RSA256 keys: -->
+openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:2048
+openssl rsa -pubout -in private_key.pem -out public_key.pem
+<!-- Convert keys to Base64: -->
+base64 -i private_key.pem -o private_key.txt
+base64 -i public_key.pem -o public_key.txt
