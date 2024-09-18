@@ -4,7 +4,7 @@ import { PaginationParams } from '@/core/repositories/pagination-params'
 import { QuestionsRepository } from '@/domain/forum/application/repositories/questions-repository'
 import { Question } from '@/domain/forum/enterprise/entities/question'
 
-import { PrismaQuestionsMapper } from '../mappers/prisma-question.mapper'
+import { PrismaQuestionsMapper } from '../mappers/prisma-questions.mapper'
 import { PrismaService } from '../prisma.service'
 
 @Injectable()

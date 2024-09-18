@@ -64,8 +64,6 @@ describe('featch recent questions (e2e)', () => {
 			.set('Authorization', `Bearer ${accessToken}`)
 			.send()
 
-		console.log(response.body.questions)
-
 		expect(response.statusCode).toEqual(200)
 		expect(response.body.questions).toEqual([
 			expect.objectContaining({ title: 'question-01' }),
