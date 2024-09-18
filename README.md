@@ -1,3 +1,6 @@
+<!-- TO_DO
+- SEEDS -->
+
 # 💬 Simple Forum API with DDD
 I developed this project during my latest studies on Node lessons at [Rocketseat](https://www.rocketseat.com.br).
 
