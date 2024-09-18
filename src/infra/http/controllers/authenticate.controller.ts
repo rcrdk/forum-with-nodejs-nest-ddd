@@ -32,29 +32,5 @@ export class AuthenticateController {
 	@UsePipes(new ZodValidationPipe(authenticateBodySchema))
 	async handle(@Body() body: AuthenticateBodySchema) {
 		const { email, password } = body
-
-		const user = await this.prisma.user.findUnique({
-			where: {
-				email,
-			},
-		})
-
-		if (!user) {
-			throw new UnauthorizedException('Invalid user credentials')
-		}
-
-		const hasValidPassword = await compare(password, user.password)
-
-		if (!hasValidPassword) {
-			throw new UnauthorizedException('Invalid user credentials')
-		}
-
-		const accessToken = this.jwt.sign({
-			sub: user.id,
-		})
-
-		return {
-			access_token: accessToken,
-		}
 	}
 }
