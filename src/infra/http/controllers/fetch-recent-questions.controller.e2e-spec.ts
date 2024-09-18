@@ -4,8 +4,8 @@ import { Test } from '@nestjs/testing'
 import { hash } from 'bcryptjs'
 import request from 'supertest'
 
-import { AppModule } from '@/app.module'
-import { PrismaService } from '@/prisma/prisma.service'
+import { AppModule } from '@/infra/app.module'
+import { PrismaService } from '@/infra/database/prisma/prisma.service'
 
 describe('featch recent questions (e2e)', () => {
 	let app: INestApplication
@@ -64,19 +64,13 @@ describe('featch recent questions (e2e)', () => {
 			.set('Authorization', `Bearer ${accessToken}`)
 			.send()
 
+		console.log(response.body.questions)
+
 		expect(response.statusCode).toEqual(200)
 		expect(response.body.questions).toEqual([
 			expect.objectContaining({ title: 'question-01' }),
 			expect.objectContaining({ title: 'question-02' }),
 			expect.objectContaining({ title: 'question-03' }),
 		])
-
-		// const questionOnDatabase = await prisma.question.findFirst({
-		// 	where: {
-		// 		title: 'Are you John Doe?',
-		// 	},
-		// })
-
-		// expect(questionOnDatabase).toBeTruthy()
 	})
 })

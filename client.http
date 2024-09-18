@@ -32,13 +32,13 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-	"title": "Lorem impsumaa",
+	"title": "Lorem impsum",
 	"content": "Dolor sit amet consectur!"
 }
 
 ###
 
 # @name fetch_recent_questions
-GET {{baseUrl}}/questions?page=2
+GET {{baseUrl}}/questions?page=1
 Content-Type: application/json
 Authorization: Bearer {{authToken}}

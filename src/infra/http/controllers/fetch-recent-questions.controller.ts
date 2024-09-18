@@ -1,9 +1,11 @@
 import { Controller, Get, HttpCode, Query, UseGuards } from '@nestjs/common'
 import { z } from 'zod'
 
+import { FetchRecentQuestionsUseCase } from '@/domain/forum/application/use-cases/fetch-recent-questions'
 import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
-import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation.pipe'
+
+import { QuestionPresenter } from '../presenters/question.presenter'
 
 const pageQueryParamSchema = z
 	.string()
@@ -19,32 +21,35 @@ type PageQueryParamSchema = z.infer<typeof pageQueryParamSchema>
 @Controller('/questions')
 @UseGuards(JwtAuthGuard)
 export class FetchRecentQuestionsController {
-	constructor(private prisma: PrismaService) {}
+	constructor(private fetchRecentQuestions: FetchRecentQuestionsUseCase) {}
 
 	@Get()
 	@HttpCode(200)
 	async handle(@Query('page', queryValidationPipe) page: PageQueryParamSchema) {
-		const MAX_ITEMS_BY_PAGE = 20
-		const CURRENT_PAGE_START_ON = (page - 1) * MAX_ITEMS_BY_PAGE
-
-		const questions = await this.prisma.question.findMany({
-			take: MAX_ITEMS_BY_PAGE,
-			skip: CURRENT_PAGE_START_ON,
-			orderBy: {
-				createdAt: 'desc',
-			},
+		const result = await this.fetchRecentQuestions.execute({
+			page,
 		})
 
-		const countQuestions = await this.prisma.question.count()
+		if (result.isLeft()) {
+			throw new Error()
+		}
+
+		const { questions } = result.value
 
 		return {
-			questions,
-			pagination: {
-				total: countQuestions,
-				perPage: MAX_ITEMS_BY_PAGE,
-				currentPage: page,
-				lastPage: Math.ceil(countQuestions / MAX_ITEMS_BY_PAGE),
-			},
+			questions: questions.map((question) =>
+				QuestionPresenter.toHttp(question),
+			),
 		}
+
+		// return {
+		// 	questions,
+		// 	pagination: {
+		// 		total: countQuestions,
+		// 		perPage: MAX_ITEMS_BY_PAGE,
+		// 		currentPage: page,
+		// 		lastPage: Math.ceil(countQuestions / MAX_ITEMS_BY_PAGE),
+		// 	},
+		// }
 	}
 }

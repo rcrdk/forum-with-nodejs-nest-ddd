@@ -49,8 +49,6 @@ export class InMemoryQuestionsRepository implements QuestionsRepository {
 		this.items[itemIndex] = question
 
 		DomainEvents.dispatchEventsForAggregate(question.id)
-
-		return this.items[itemIndex]
 	}
 
 	async delete(question: Question) {
