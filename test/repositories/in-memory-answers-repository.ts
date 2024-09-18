@@ -41,8 +41,6 @@ export class InMemoryAnswersRepository implements AnswersRepository {
 		this.items[itemIndex] = answer
 
 		DomainEvents.dispatchEventsForAggregate(answer.id)
-
-		return this.items[itemIndex]
 	}
 
 	async delete(answer: Answer) {

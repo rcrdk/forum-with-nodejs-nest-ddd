@@ -4,7 +4,7 @@ import { PaginationParams } from '@/core/repositories/pagination-params'
 import { QuestionsRepository } from '@/domain/forum/application/repositories/questions-repository'
 import { Question } from '@/domain/forum/enterprise/entities/question'
 
-import { PrismaQuestionsMapper } from '../mappers/prisma-questions.mapper'
+import { PrismaQuestionMapper } from '../mappers/prisma-question.mapper'
 import { PrismaService } from '../prisma.service'
 
 @Injectable()
@@ -22,7 +22,7 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
 			return null
 		}
 
-		return PrismaQuestionsMapper.toDomain(question)
+		return PrismaQuestionMapper.toDomain(question)
 	}
 
 	async findBySlug(slug: string) {
@@ -36,7 +36,7 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
 			return null
 		}
 
-		return PrismaQuestionsMapper.toDomain(question)
+		return PrismaQuestionMapper.toDomain(question)
 	}
 
 	async findManyRecent({ page }: PaginationParams) {
@@ -51,11 +51,11 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
 			skip: ITEMS_OFFSET_START,
 		})
 
-		return questions.map((question) => PrismaQuestionsMapper.toDomain(question))
+		return questions.map((question) => PrismaQuestionMapper.toDomain(question))
 	}
 
 	async create(question: Question) {
-		const data = PrismaQuestionsMapper.toPrisma(question)
+		const data = PrismaQuestionMapper.toPrisma(question)
 
 		await this.prisma.question.create({
 			data,
@@ -63,7 +63,7 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
 	}
 
 	async save(question: Question) {
-		const data = PrismaQuestionsMapper.toPrisma(question)
+		const data = PrismaQuestionMapper.toPrisma(question)
 
 		await this.prisma.question.update({
 			where: { id: data.id },
@@ -72,10 +72,8 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
 	}
 
 	async delete(question: Question) {
-		const data = PrismaQuestionsMapper.toPrisma(question)
-
 		await this.prisma.question.delete({
-			where: { id: data.id },
+			where: { id: question.id.toString() },
 		})
 	}
 }
