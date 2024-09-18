@@ -10,7 +10,7 @@ import { Slug } from '@/domain/forum/enterprise/entities/value-objects/slug'
 import { AppModule } from '@/infra/app.module'
 import { DatabaseModule } from '@/infra/database/database.module'
 
-describe('fetch recent questions (e2e)', () => {
+describe('fetch question by slug (e2e)', () => {
 	let app: INestApplication
 	let studentFactory: StudentFactory
 	let questionFactory: QuestionFactory
@@ -31,7 +31,7 @@ describe('fetch recent questions (e2e)', () => {
 		await app.init()
 	})
 
-	test('[GET] /questions', async () => {
+	test('[GET] /questions/:slug', async () => {
 		const user = await studentFactory.makePrismaStudent({
 			name: 'John Doe',
 			email: 'john@doe.com',
@@ -40,30 +40,19 @@ describe('fetch recent questions (e2e)', () => {
 
 		const accessToken = jwt.sign({ sub: user.id.toString() })
 
-		await Promise.all([
-			questionFactory.makePrismaQuestion({
-				authorId: user.id,
-				title: 'Question 01',
-				slug: Slug.create('question-01'),
-				content: 'In proident ipsum ullamco nostrud.',
-			}),
-			questionFactory.makePrismaQuestion({
-				authorId: user.id,
-				title: 'Question 02',
-				slug: Slug.create('question-02'),
-				content: 'In proident ipsum ullamco nostrud.',
-			}),
-		])
+		await questionFactory.makePrismaQuestion({
+			authorId: user.id,
+			title: 'Question 01',
+			slug: Slug.create('question-01'),
+			content: 'In proident ipsum ullamco nostrud.',
+		})
 
 		const response = await request(app.getHttpServer())
-			.get('/questions')
+			.get('/questions/question-01')
 			.set('Authorization', `Bearer ${accessToken}`)
 			.send()
 
 		expect(response.statusCode).toEqual(200)
-		expect(response.body.questions).toEqual([
-			expect.objectContaining({ title: 'Question 02' }),
-			expect.objectContaining({ title: 'Question 01' }),
-		])
+		expect(response.body.question).toMatchObject({ title: 'Question 01' })
 	})
 })

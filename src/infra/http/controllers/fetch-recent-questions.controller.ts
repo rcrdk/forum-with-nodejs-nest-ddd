@@ -45,15 +45,5 @@ export class FetchRecentQuestionsController {
 				QuestionPresenter.toHttp(question),
 			),
 		}
-
-		// return {
-		// 	questions,
-		// 	pagination: {
-		// 		total: countQuestions,
-		// 		perPage: MAX_ITEMS_BY_PAGE,
-		// 		currentPage: page,
-		// 		lastPage: Math.ceil(countQuestions / MAX_ITEMS_BY_PAGE),
-		// 	},
-		// }
 	}
 }
