@@ -2,6 +2,7 @@ import { INestApplication } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { Test } from '@nestjs/testing'
 import request from 'supertest'
+import { AnswerFactory } from 'test/factories/make-answer'
 import { QuestionFactory } from 'test/factories/make-question'
 import { StudentFactory } from 'test/factories/make-student'
 
@@ -9,10 +10,11 @@ import { AppModule } from '@/infra/app.module'
 import { DatabaseModule } from '@/infra/database/database.module'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 
-describe('answer question (e2e)', () => {
+describe('comment on answer (e2e)', () => {
 	let app: INestApplication
 	let studentFactory: StudentFactory
 	let questionFactory: QuestionFactory
+	let answerFactory: AnswerFactory
 	let prisma: PrismaService
 
 	let jwt: JwtService
@@ -20,20 +22,21 @@ describe('answer question (e2e)', () => {
 	beforeAll(async () => {
 		const moduleRef = await Test.createTestingModule({
 			imports: [AppModule, DatabaseModule],
-			providers: [StudentFactory, QuestionFactory],
+			providers: [StudentFactory, QuestionFactory, AnswerFactory],
 		}).compile()
 
 		app = moduleRef.createNestApplication()
 
 		studentFactory = moduleRef.get(StudentFactory)
 		questionFactory = moduleRef.get(QuestionFactory)
+		answerFactory = moduleRef.get(AnswerFactory)
 		prisma = moduleRef.get(PrismaService)
 		jwt = moduleRef.get(JwtService)
 
 		await app.init()
 	})
 
-	test('[POST] /questions/:questionId/answers', async () => {
+	test('[POST] /answers/:answerId/comments', async () => {
 		const user = await studentFactory.makePrismaStudent()
 		const accessToken = jwt.sign({ sub: user.id.toString() })
 
@@ -41,21 +44,26 @@ describe('answer question (e2e)', () => {
 			authorId: user.id,
 		})
 
+		const answer = await answerFactory.makePrismaAnswer({
+			questionId: question.id,
+			authorId: user.id,
+		})
+
 		const response = await request(app.getHttpServer())
-			.post(`/questions/${question.id.toString()}/answers`)
+			.post(`/answers/${answer.id.toString()}/comments`)
 			.set('Authorization', `Bearer ${accessToken}`)
 			.send({
-				content: 'Yup, indeed i am!',
+				content: 'First to comment!',
 			})
 
 		expect(response.statusCode).toEqual(201)
 
-		const answerOnDatabase = await prisma.answer.findFirst({
+		const commentOnDatabase = await prisma.comment.findFirst({
 			where: {
-				content: 'Yup, indeed i am!',
+				content: 'First to comment!',
 			},
 		})
 
-		expect(answerOnDatabase).toBeTruthy()
+		expect(commentOnDatabase).toBeTruthy()
 	})
 })
