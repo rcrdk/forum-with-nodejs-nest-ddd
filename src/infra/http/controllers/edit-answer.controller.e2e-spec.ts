@@ -2,6 +2,7 @@ import { INestApplication } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { Test } from '@nestjs/testing'
 import request from 'supertest'
+import { AnswerFactory } from 'test/factories/make-answer'
 import { QuestionFactory } from 'test/factories/make-question'
 import { StudentFactory } from 'test/factories/make-student'
 
@@ -9,30 +10,32 @@ import { AppModule } from '@/infra/app.module'
 import { DatabaseModule } from '@/infra/database/database.module'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 
-describe('edit question (e2e)', () => {
+describe('edit answer (e2e)', () => {
 	let app: INestApplication
 	let studentFactory: StudentFactory
 	let questionFactory: QuestionFactory
+	let answerFactory: AnswerFactory
 	let prisma: PrismaService
 	let jwt: JwtService
 
 	beforeAll(async () => {
 		const moduleRef = await Test.createTestingModule({
 			imports: [AppModule, DatabaseModule],
-			providers: [StudentFactory, QuestionFactory],
+			providers: [StudentFactory, QuestionFactory, AnswerFactory],
 		}).compile()
 
 		app = moduleRef.createNestApplication()
 
 		studentFactory = moduleRef.get(StudentFactory)
 		questionFactory = moduleRef.get(QuestionFactory)
+		answerFactory = moduleRef.get(AnswerFactory)
 		prisma = moduleRef.get(PrismaService)
 		jwt = moduleRef.get(JwtService)
 
 		await app.init()
 	})
 
-	test('[PUT] /questions/:id', async () => {
+	test('[PUT] /answers/:id', async () => {
 		const user = await studentFactory.makePrismaStudent()
 		const accessToken = jwt.sign({ sub: user.id.toString() })
 
@@ -40,22 +43,26 @@ describe('edit question (e2e)', () => {
 			authorId: user.id,
 		})
 
+		const answer = await answerFactory.makePrismaAnswer({
+			questionId: question.id,
+			authorId: user.id,
+		})
+
 		const response = await request(app.getHttpServer())
-			.put(`/questions/${question.id.toString()}`)
+			.put(`/answers/${answer.id.toString()}`)
 			.set('Authorization', `Bearer ${accessToken}`)
 			.send({
-				title: 'Are you John Doe?',
-				content: 'Esse occaecat excepteur nisi incididunt.',
+				content: 'This was updated.',
 			})
 
 		expect(response.statusCode).toEqual(204)
 
-		const questionOnDatabase = await prisma.question.findFirst({
+		const answerOnDatabase = await prisma.answer.findFirst({
 			where: {
-				title: 'Are you John Doe?',
+				content: 'This was updated.',
 			},
 		})
 
-		expect(questionOnDatabase).toBeTruthy()
+		expect(answerOnDatabase).toBeTruthy()
 	})
 })

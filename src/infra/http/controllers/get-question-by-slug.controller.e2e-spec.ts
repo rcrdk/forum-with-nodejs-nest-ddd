@@ -1,12 +1,10 @@
 import { INestApplication } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { Test } from '@nestjs/testing'
-import { hash } from 'bcryptjs'
 import request from 'supertest'
 import { QuestionFactory } from 'test/factories/make-question'
 import { StudentFactory } from 'test/factories/make-student'
 
-import { Slug } from '@/domain/forum/enterprise/entities/value-objects/slug'
 import { AppModule } from '@/infra/app.module'
 import { DatabaseModule } from '@/infra/database/database.module'
 
@@ -32,18 +30,12 @@ describe('fetch question by slug (e2e)', () => {
 	})
 
 	test('[GET] /questions/:slug', async () => {
-		const user = await studentFactory.makePrismaStudent({
-			name: 'John Doe',
-			email: 'john@doe.com',
-			password: await hash('123456', 8),
-		})
-
+		const user = await studentFactory.makePrismaStudent()
 		const accessToken = jwt.sign({ sub: user.id.toString() })
 
 		await questionFactory.makePrismaQuestion({
 			authorId: user.id,
 			title: 'Question 01',
-			slug: Slug.create('question-01'),
 			content: 'In proident ipsum ullamco nostrud.',
 		})
 

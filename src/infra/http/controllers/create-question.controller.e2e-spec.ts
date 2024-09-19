@@ -1,7 +1,6 @@
 import { INestApplication } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { Test } from '@nestjs/testing'
-import { hash } from 'bcryptjs'
 import request from 'supertest'
 import { StudentFactory } from 'test/factories/make-student'
 
@@ -31,12 +30,7 @@ describe('create question (e2e)', () => {
 	})
 
 	test('[POST] /questions', async () => {
-		const user = await studentFactory.makePrismaStudent({
-			name: 'John Doe',
-			email: 'john@doe.com',
-			password: await hash('123456', 8),
-		})
-
+		const user = await studentFactory.makePrismaStudent()
 		const accessToken = jwt.sign({ sub: user.id.toString() })
 
 		const response = await request(app.getHttpServer())

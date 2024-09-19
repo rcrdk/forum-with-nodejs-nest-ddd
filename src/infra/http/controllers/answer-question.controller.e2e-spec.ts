@@ -9,11 +9,12 @@ import { AppModule } from '@/infra/app.module'
 import { DatabaseModule } from '@/infra/database/database.module'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 
-describe('edit question (e2e)', () => {
+describe('answer question (e2e)', () => {
 	let app: INestApplication
 	let studentFactory: StudentFactory
 	let questionFactory: QuestionFactory
 	let prisma: PrismaService
+
 	let jwt: JwtService
 
 	beforeAll(async () => {
@@ -32,7 +33,7 @@ describe('edit question (e2e)', () => {
 		await app.init()
 	})
 
-	test('[PUT] /questions/:id', async () => {
+	test('[POST] /questions/:questionId/answers', async () => {
 		const user = await studentFactory.makePrismaStudent()
 		const accessToken = jwt.sign({ sub: user.id.toString() })
 
@@ -40,22 +41,23 @@ describe('edit question (e2e)', () => {
 			authorId: user.id,
 		})
 
+		const teste = question.id.toString()
+
 		const response = await request(app.getHttpServer())
-			.put(`/questions/${question.id.toString()}`)
+			.post(`/questions/${teste}/answers`)
 			.set('Authorization', `Bearer ${accessToken}`)
 			.send({
-				title: 'Are you John Doe?',
-				content: 'Esse occaecat excepteur nisi incididunt.',
+				content: 'Yup, indeed i am!',
 			})
 
-		expect(response.statusCode).toEqual(204)
+		expect(response.statusCode).toEqual(201)
 
-		const questionOnDatabase = await prisma.question.findFirst({
+		const answerOnDatabase = await prisma.answer.findFirst({
 			where: {
-				title: 'Are you John Doe?',
+				content: 'Yup, indeed i am!',
 			},
 		})
 
-		expect(questionOnDatabase).toBeTruthy()
+		expect(answerOnDatabase).toBeTruthy()
 	})
 })
