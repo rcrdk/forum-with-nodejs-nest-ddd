@@ -1,3 +1,5 @@
+import { Injectable } from '@nestjs/common'
+
 import { Either, left, right } from '@/core/either'
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
@@ -24,6 +26,7 @@ type EditQuestionUseCaseResponse = Either<
 	}
 >
 
+@Injectable()
 export class EditQuestionUseCase {
 	constructor(
 		private questionsRepository: QuestionsRepository,
