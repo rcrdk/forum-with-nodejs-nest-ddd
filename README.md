@@ -32,8 +32,12 @@ openssl rsa -pubout -in private_key.pem -out public_key.pem
 base64 -i private_key.pem -o private_key.txt
 base64 -i public_key.pem -o public_key.txt
 
+# Setup Cloudflare R2 dev bucket and test bucket
+# Setup Cloudflare R2 api keys
+
 # Set enviroment variables:
-cp .env.example .env.local
+cp .env.example .env
+cp .env.test.example .env.test
 
 npm run test
 npm run test:e2e
