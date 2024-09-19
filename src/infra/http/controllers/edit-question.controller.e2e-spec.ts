@@ -6,14 +6,15 @@ import request from 'supertest'
 import { QuestionFactory } from 'test/factories/make-question'
 import { StudentFactory } from 'test/factories/make-student'
 
-import { Slug } from '@/domain/forum/enterprise/entities/value-objects/slug'
 import { AppModule } from '@/infra/app.module'
 import { DatabaseModule } from '@/infra/database/database.module'
+import { PrismaService } from '@/infra/database/prisma/prisma.service'
 
-describe('fetch recent questions (e2e)', () => {
+describe('edit question (e2e)', () => {
 	let app: INestApplication
 	let studentFactory: StudentFactory
 	let questionFactory: QuestionFactory
+	let prisma: PrismaService
 	let jwt: JwtService
 
 	beforeAll(async () => {
@@ -26,12 +27,13 @@ describe('fetch recent questions (e2e)', () => {
 
 		studentFactory = moduleRef.get(StudentFactory)
 		questionFactory = moduleRef.get(QuestionFactory)
+		prisma = moduleRef.get(PrismaService)
 		jwt = moduleRef.get(JwtService)
 
 		await app.init()
 	})
 
-	test('[GET] /questions', async () => {
+	test('[PUT] /questions/:id', async () => {
 		const user = await studentFactory.makePrismaStudent({
 			name: 'John Doe',
 			email: 'john@doe.com',
@@ -40,32 +42,28 @@ describe('fetch recent questions (e2e)', () => {
 
 		const accessToken = jwt.sign({ sub: user.id.toString() })
 
-		await Promise.all([
-			questionFactory.makePrismaQuestion({
-				authorId: user.id,
-				title: 'Question 01',
-				slug: Slug.create('question-01'),
-				content: 'In proident ipsum ullamco nostrud.',
-			}),
-			questionFactory.makePrismaQuestion({
-				authorId: user.id,
-				title: 'Question 02',
-				slug: Slug.create('question-02'),
-				content: 'In proident ipsum ullamco nostrud.',
-			}),
-		])
+		const question = await questionFactory.makePrismaQuestion({
+			authorId: user.id,
+			title: 'Question 01',
+			content: 'In proident ipsum ullamco nostrud.',
+		})
 
 		const response = await request(app.getHttpServer())
-			.get('/questions')
+			.put(`/questions/${question.id.toString()}`)
 			.set('Authorization', `Bearer ${accessToken}`)
-			.send()
+			.send({
+				title: 'Are you John Doe?',
+				content: 'Esse occaecat excepteur nisi incididunt.',
+			})
 
-		expect(response.statusCode).toEqual(200)
-		expect(response.body.questions).toEqual(
-			expect.arrayContaining([
-				expect.objectContaining({ title: 'Question 02' }),
-				expect.objectContaining({ title: 'Question 01' }),
-			]),
-		)
+		expect(response.statusCode).toEqual(204)
+
+		const questionOnDatabase = await prisma.question.findFirst({
+			where: {
+				title: 'Are you John Doe?',
+			},
+		})
+
+		expect(questionOnDatabase).toBeTruthy()
 	})
 })
