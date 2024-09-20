@@ -1,20 +1,29 @@
 import { makeQuestion } from 'test/factories/make-question'
+import { InMemoryAttachementsRepository } from 'test/repositories/in-memory-attatchments-repository'
 import { InMemoryQuestionAttachmentsRepository } from 'test/repositories/in-memory-question-attachments-repository'
 import { InMemoryQuestionsRepository } from 'test/repositories/in-memory-questions-repository'
+import { InMemoryStudentsRepository } from 'test/repositories/in-memory-students-repository'
 
 import { FetchRecentQuestionsUseCase } from './fetch-recent-questions'
 
+let inMemoryAttachmentsRepository: InMemoryAttachementsRepository
+let inMemoryStudentsRepository: InMemoryStudentsRepository
 let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentsRepository
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository
 let sut: FetchRecentQuestionsUseCase
 
 describe('fetch recent questions', () => {
 	beforeEach(() => {
-		inMemoryQuestionAttachmentsRepository =
-			new InMemoryQuestionAttachmentsRepository()
+		inMemoryAttachmentsRepository = new InMemoryAttachementsRepository()
+		inMemoryStudentsRepository = new InMemoryStudentsRepository()
+		// eslint-disable-next-line prettier/prettier
+		inMemoryQuestionAttachmentsRepository = new InMemoryQuestionAttachmentsRepository()
 		inMemoryQuestionsRepository = new InMemoryQuestionsRepository(
 			inMemoryQuestionAttachmentsRepository,
+			inMemoryAttachmentsRepository,
+			inMemoryStudentsRepository,
 		)
+
 		sut = new FetchRecentQuestionsUseCase(inMemoryQuestionsRepository)
 	})
 

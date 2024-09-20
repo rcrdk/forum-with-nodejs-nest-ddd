@@ -16,6 +16,7 @@ I developed this project during my latest studies on Node lessons at [Rocketseat
 - [Prisma](https://www.prisma.io) / [PostgreSQL](https://www.postgresql.org/)  / [Docker](https://www.docker.com/)
 - [Insomnia](https://insomnia.rest/)
 - [Vitest](https://vitest.dev/)
+<!-- - Cloudflare R2 + AWS SDK -->
 
 ## 🖥️ Project
 <!-- This project was developed to practice the Domain-Driven Design (DDD) and Clean Architecture in Node.js. It was developed from the core domain, to base entities, to value objects, to relationships, to use cases, to subdomains, to domain events and unit tests. -->

@@ -1,23 +1,31 @@
 import { makeQuestion } from 'test/factories/make-question'
 import { makeQuestionAttachment } from 'test/factories/make-question-attachment'
+import { InMemoryAttachementsRepository } from 'test/repositories/in-memory-attatchments-repository'
 import { InMemoryQuestionAttachmentsRepository } from 'test/repositories/in-memory-question-attachments-repository'
 import { InMemoryQuestionsRepository } from 'test/repositories/in-memory-questions-repository'
+import { InMemoryStudentsRepository } from 'test/repositories/in-memory-students-repository'
 
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { UnauthorizedError } from '@/core/errors/unauthorized-error'
 
 import { DeleteQuestionUseCase } from './delete-question'
 
+let inMemoryAttachmentsRepository: InMemoryAttachementsRepository
+let inMemoryStudentsRepository: InMemoryStudentsRepository
 let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentsRepository
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository
 let sut: DeleteQuestionUseCase
 
 describe('delete question by id', () => {
 	beforeEach(() => {
-		inMemoryQuestionAttachmentsRepository =
-			new InMemoryQuestionAttachmentsRepository()
+		inMemoryAttachmentsRepository = new InMemoryAttachementsRepository()
+		inMemoryStudentsRepository = new InMemoryStudentsRepository()
+		// eslint-disable-next-line prettier/prettier
+		inMemoryQuestionAttachmentsRepository = new InMemoryQuestionAttachmentsRepository()
 		inMemoryQuestionsRepository = new InMemoryQuestionsRepository(
 			inMemoryQuestionAttachmentsRepository,
+			inMemoryAttachmentsRepository,
+			inMemoryStudentsRepository,
 		)
 		sut = new DeleteQuestionUseCase(inMemoryQuestionsRepository)
 	})

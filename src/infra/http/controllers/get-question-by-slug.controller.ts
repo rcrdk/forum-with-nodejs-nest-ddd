@@ -8,7 +8,7 @@ import {
 
 import { GetQuestionBySlugUseCase } from '@/domain/forum/application/use-cases/get-question-by-slug'
 
-import { QuestionPresenter } from '../presenters/question.presenter'
+import { QuestionDetailsPresenter } from '../presenters/question-details.presenter'
 
 @Controller('/questions/:slug')
 export class GetQuestionBySlugController {
@@ -26,7 +26,7 @@ export class GetQuestionBySlugController {
 		}
 
 		return {
-			question: QuestionPresenter.toHttp(result.value.question),
+			question: QuestionDetailsPresenter.toHttp(result.value.question),
 		}
 	}
 }
