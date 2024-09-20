@@ -16,7 +16,7 @@ import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation.pipe'
 const editQuestionBodySchema = z.object({
 	title: z.string(),
 	content: z.string(),
-	attachments: z.array(z.string().uuid()),
+	attachments: z.array(z.string().uuid()).default([]),
 })
 
 type EditQuestionBodySchema = z.infer<typeof editQuestionBodySchema>

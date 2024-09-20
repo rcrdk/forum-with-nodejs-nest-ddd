@@ -1,5 +1,11 @@
 <!-- TO_DO
-- SEEDS -->
+- Prisma Seed
+- Insomnia Export
+- About the project
+- Split "get starter" with sub-sections
+- add tests on github worflow [commit, pr]
+- prepare for ci
+-->
 
 # 💬 Simple Forum API with DDD
 I developed this project during my latest studies on Node lessons at [Rocketseat](https://www.rocketseat.com.br).
