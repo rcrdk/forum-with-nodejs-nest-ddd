@@ -52,7 +52,7 @@ describe('create question', () => {
 		])
 	})
 
-	it('should persist attachemnts when creating a question', async () => {
+	it('should persist Attachments when creating a question', async () => {
 		const result = await sut.execute({
 			authorId: 'author-01',
 			title: 'Que dia é hoje?',

@@ -41,7 +41,7 @@ describe('answer question', () => {
 		])
 	})
 
-	it('should persist attachemnts when creating a answer', async () => {
+	it('should persist Attachments when creating a answer', async () => {
 		const result = await sut.execute({
 			questionId: 'question-01',
 			authorId: 'author-01',
