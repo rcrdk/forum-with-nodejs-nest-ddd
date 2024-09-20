@@ -4,6 +4,7 @@ import { PaginationParams } from '@/core/repositories/pagination-params'
 import { QuestionCommentsRepository } from '@/domain/forum/application/repositories/question-comments-repository'
 import { QuestionComment } from '@/domain/forum/enterprise/entities/question-comment'
 
+import { PrismaCommentWithAuthorMapper } from '../mappers/prisma-comment-with-author.mapper'
 import { PrismaQuestionCommentMapper } from '../mappers/prisma-question-comment.mapper'
 import { PrismaService } from '../prisma.service'
 
@@ -44,6 +45,29 @@ export class PrismaQuestionCommentsRepository
 
 		return questions.map((comment) =>
 			PrismaQuestionCommentMapper.toDomain(comment),
+		)
+	}
+
+	async findManyByQuestionIdWithAuthor(id: string, { page }: PaginationParams) {
+		const ITEMS_PER_PAGE = 20
+		const ITEMS_OFFSET_START = (page - 1) * ITEMS_PER_PAGE
+
+		const questions = await this.prisma.comment.findMany({
+			where: {
+				questionId: id,
+			},
+			include: {
+				author: true,
+			},
+			orderBy: {
+				createdAt: 'desc',
+			},
+			take: ITEMS_PER_PAGE,
+			skip: ITEMS_OFFSET_START,
+		})
+
+		return questions.map((comment) =>
+			PrismaCommentWithAuthorMapper.toDomain(comment),
 		)
 	}
 

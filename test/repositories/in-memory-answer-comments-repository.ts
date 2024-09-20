@@ -1,11 +1,16 @@
 import { PaginationParams } from '@/core/repositories/pagination-params'
 import { AnswerCommentsRepository } from '@/domain/forum/application/repositories/answer-comments-repository'
 import { AnswerComment } from '@/domain/forum/enterprise/entities/answer-comment'
+import { CommentWithAuthor } from '@/domain/forum/enterprise/entities/value-objects/comment-with-author'
+
+import { InMemoryStudentsRepository } from './in-memory-students-repository'
 
 // eslint-disable-next-line prettier/prettier
 export class InMemoryAnswerCommentsRepository implements AnswerCommentsRepository
 {
 	public items: AnswerComment[] = []
+
+	constructor(private studentsRepository: InMemoryStudentsRepository) {}
 
 	async findById(id: string) {
 		const answerComment = this.items.find(
@@ -23,6 +28,38 @@ export class InMemoryAnswerCommentsRepository implements AnswerCommentsRepositor
 		const answerComments = this.items
 			.filter((item) => item.answerId.toString() === id)
 			.slice(ITEMS_OFFSET_START, ITEMS_OFFSET_END)
+
+		return answerComments
+	}
+
+	async findManyByAnswerIdWithAuthor(id: string, { page }: PaginationParams) {
+		const ITEMS_PER_PAGE = 20
+		const ITEMS_OFFSET_START = (page - 1) * ITEMS_PER_PAGE
+		const ITEMS_OFFSET_END = page * ITEMS_PER_PAGE
+
+		const answerComments = this.items
+			.filter((item) => item.answerId.toString() === id)
+			.slice(ITEMS_OFFSET_START, ITEMS_OFFSET_END)
+			.map((comment) => {
+				const author = this.studentsRepository.items.find((student) =>
+					student.id.equals(comment.authorId),
+				)
+
+				if (!author) {
+					throw new Error(
+						`Author with id "${comment.authorId.toString()}" does not exists.`,
+					)
+				}
+
+				return CommentWithAuthor.create({
+					commentId: comment.id,
+					content: comment.content,
+					createdAt: comment.createdAt,
+					updatedAt: comment.updatedAt,
+					authorId: comment.authorId,
+					author: author?.name,
+				})
+			})
 
 		return answerComments
 	}
