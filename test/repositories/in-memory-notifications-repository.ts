@@ -24,7 +24,5 @@ export class InMemoryNotificationsRepository
 		)
 
 		this.items[itemIndex] = notification
-
-		return this.items[itemIndex]
 	}
 }
