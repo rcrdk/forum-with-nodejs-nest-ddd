@@ -8,8 +8,8 @@ import { UnauthorizedError } from '@/core/errors/unauthorized-error'
 import { Question } from '../../enterprise/entities/question'
 import { QuestionAttachment } from '../../enterprise/entities/question-attachment'
 import { QuestionAttachmentList } from '../../enterprise/entities/question-attachment-list'
-import { QuestionAttachmentsRepository } from '../repositories/question-attachments-repository'
-import { QuestionsRepository } from '../repositories/questions-repository'
+import { QuestionAttachmentsRepository } from '../repositories/question-attachments.repository'
+import { QuestionsRepository } from '../repositories/questions.repository'
 
 interface EditQuestionUseCaseRequest {
 	authorId: string

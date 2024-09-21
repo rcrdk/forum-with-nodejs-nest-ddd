@@ -1,5 +1,5 @@
 import { makeNotification } from 'test/factories/make-notification'
-import { InMemoryNotificationsRepository } from 'test/repositories/in-memory-notifications-repository'
+import { InMemoryNotificationsRepository } from 'test/repositories/in-memory-notifications.repository'
 
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { UnauthorizedError } from '@/core/errors/unauthorized-error'

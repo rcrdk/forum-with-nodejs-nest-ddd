@@ -4,7 +4,7 @@ import { Either, left, right } from '@/core/either'
 
 import { Student } from '../../enterprise/entities/student'
 import { HashGenerator } from '../cryptography/hash-generator'
-import { StudentsRepository } from '../repositories/students-repository'
+import { StudentsRepository } from '../repositories/students.repository'
 import { StudentAlreadyExistsError } from './errors/student-already-exists-error'
 
 interface RegisterStudentUseCaseRequest {

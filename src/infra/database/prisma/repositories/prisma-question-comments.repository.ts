@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common'
 
 import { PaginationParams } from '@/core/repositories/pagination-params'
-import { AnswerCommentsRepository } from '@/domain/forum/application/repositories/answer-comments-repository'
-import { AnswerComment } from '@/domain/forum/enterprise/entities/answer-comment'
+import { QuestionCommentsRepository } from '@/domain/forum/application/repositories/question-comments.repository'
+import { QuestionComment } from '@/domain/forum/enterprise/entities/question-comment'
 
-import { PrismaAnswerCommentMapper } from '../mappers/prisma-answer-comment.mapper'
 import { PrismaCommentWithAuthorMapper } from '../mappers/prisma-comment-with-author.mapper'
+import { PrismaQuestionCommentMapper } from '../mappers/prisma-question-comment.mapper'
 import { PrismaService } from '../prisma.service'
 
 @Injectable()
-export class PrismaAnswerCommentsRepository
-	implements AnswerCommentsRepository
+export class PrismaQuestionCommentsRepository
+	implements QuestionCommentsRepository
 {
 	constructor(private prisma: PrismaService) {}
 
@@ -25,16 +25,16 @@ export class PrismaAnswerCommentsRepository
 			return null
 		}
 
-		return PrismaAnswerCommentMapper.toDomain(comment)
+		return PrismaQuestionCommentMapper.toDomain(comment)
 	}
 
-	async findManyByAnswerId(id: string, { page }: PaginationParams) {
+	async findManyByQuestionId(id: string, { page }: PaginationParams) {
 		const ITEMS_PER_PAGE = 20
 		const ITEMS_OFFSET_START = (page - 1) * ITEMS_PER_PAGE
 
 		const questions = await this.prisma.comment.findMany({
 			where: {
-				answerId: id,
+				questionId: id,
 			},
 			orderBy: {
 				createdAt: 'desc',
@@ -44,17 +44,17 @@ export class PrismaAnswerCommentsRepository
 		})
 
 		return questions.map((comment) =>
-			PrismaAnswerCommentMapper.toDomain(comment),
+			PrismaQuestionCommentMapper.toDomain(comment),
 		)
 	}
 
-	async findManyByAnswerIdWithAuthor(id: string, { page }: PaginationParams) {
+	async findManyByQuestionIdWithAuthor(id: string, { page }: PaginationParams) {
 		const ITEMS_PER_PAGE = 20
 		const ITEMS_OFFSET_START = (page - 1) * ITEMS_PER_PAGE
 
 		const questions = await this.prisma.comment.findMany({
 			where: {
-				answerId: id,
+				questionId: id,
 			},
 			include: {
 				author: true,
@@ -71,15 +71,15 @@ export class PrismaAnswerCommentsRepository
 		)
 	}
 
-	async create(comment: AnswerComment) {
-		const data = PrismaAnswerCommentMapper.toPrisma(comment)
+	async create(comment: QuestionComment) {
+		const data = PrismaQuestionCommentMapper.toPrisma(comment)
 
 		await this.prisma.comment.create({
 			data,
 		})
 	}
 
-	async delete(comment: AnswerComment) {
+	async delete(comment: QuestionComment) {
 		await this.prisma.comment.delete({
 			where: { id: comment.id.toString() },
 		})

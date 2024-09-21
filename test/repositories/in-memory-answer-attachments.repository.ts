@@ -1,4 +1,4 @@
-import { AnswerAttachmentsRepository } from '@/domain/forum/application/repositories/answer-attachments-repository'
+import { AnswerAttachmentsRepository } from '@/domain/forum/application/repositories/answer-attachments.repository'
 import { AnswerAttachment } from '@/domain/forum/enterprise/entities/answer-attachment'
 
 // eslint-disable-next-line prettier/prettier

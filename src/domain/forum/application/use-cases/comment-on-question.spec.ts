@@ -1,9 +1,9 @@
 import { makeQuestion } from 'test/factories/make-question'
-import { InMemoryAttachementsRepository } from 'test/repositories/in-memory-attatchments-repository'
-import { InMemoryQuestionAttachmentsRepository } from 'test/repositories/in-memory-question-attachments-repository'
-import { InMemoryQuestionCommentsRepository } from 'test/repositories/in-memory-question-comments-repository'
-import { InMemoryQuestionsRepository } from 'test/repositories/in-memory-questions-repository'
-import { InMemoryStudentsRepository } from 'test/repositories/in-memory-students-repository'
+import { InMemoryAttachementsRepository } from 'test/repositories/in-memory-attatchments.repository'
+import { InMemoryQuestionAttachmentsRepository } from 'test/repositories/in-memory-question-attachments.repository'
+import { InMemoryQuestionCommentsRepository } from 'test/repositories/in-memory-question-comments.repository'
+import { InMemoryQuestionsRepository } from 'test/repositories/in-memory-questions.repository'
+import { InMemoryStudentsRepository } from 'test/repositories/in-memory-students.repository'
 
 import { CommentOnQuestionUseCase } from './comment-on-question'
 

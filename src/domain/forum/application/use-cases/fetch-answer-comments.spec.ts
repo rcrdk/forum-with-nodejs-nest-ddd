@@ -1,7 +1,7 @@
 import { makeAnswerComment } from 'test/factories/make-answer-comment'
 import { makeStudent } from 'test/factories/make-student'
-import { InMemoryAnswerCommentsRepository } from 'test/repositories/in-memory-answer-comments-repository'
-import { InMemoryStudentsRepository } from 'test/repositories/in-memory-students-repository'
+import { InMemoryAnswerCommentsRepository } from 'test/repositories/in-memory-answer-comments.repository'
+import { InMemoryStudentsRepository } from 'test/repositories/in-memory-students.repository'
 
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 

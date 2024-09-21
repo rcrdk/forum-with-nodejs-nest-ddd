@@ -5,7 +5,7 @@ import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
 import { UnauthorizedError } from '@/core/errors/unauthorized-error'
 import { Notification } from '@/domain/notification/enterprise/entities/notification'
 
-import { NotificationsRepository } from '../repositories/notifications-repository'
+import { NotificationsRepository } from '../repositories/notifications.repository'
 
 interface ReadNotificationUseCaseRequest {
 	recipientId: string

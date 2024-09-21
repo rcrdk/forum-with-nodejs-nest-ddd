@@ -1,9 +1,9 @@
 import { PaginationParams } from '@/core/repositories/pagination-params'
-import { QuestionCommentsRepository } from '@/domain/forum/application/repositories/question-comments-repository'
+import { QuestionCommentsRepository } from '@/domain/forum/application/repositories/question-comments.repository'
 import { QuestionComment } from '@/domain/forum/enterprise/entities/question-comment'
 import { CommentWithAuthor } from '@/domain/forum/enterprise/entities/value-objects/comment-with-author'
 
-import { InMemoryStudentsRepository } from './in-memory-students-repository'
+import { InMemoryStudentsRepository } from './in-memory-students.repository'
 
 // eslint-disable-next-line prettier/prettier
 export class InMemoryQuestionCommentsRepository implements QuestionCommentsRepository

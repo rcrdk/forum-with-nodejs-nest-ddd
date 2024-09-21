@@ -5,8 +5,8 @@ import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
 import { UnauthorizedError } from '@/core/errors/unauthorized-error'
 
 import { Question } from '../../enterprise/entities/question'
-import { AnswersRepository } from '../repositories/answers-repository'
-import { QuestionsRepository } from '../repositories/questions-repository'
+import { AnswersRepository } from '../repositories/answers.repository'
+import { QuestionsRepository } from '../repositories/questions.repository'
 
 interface ChooseQuestionBestAnswerUseCaseRequest {
 	answerId: string

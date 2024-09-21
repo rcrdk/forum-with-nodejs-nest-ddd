@@ -8,8 +8,8 @@ import { UnauthorizedError } from '@/core/errors/unauthorized-error'
 import { Answer } from '../../enterprise/entities/answer'
 import { AnswerAttachment } from '../../enterprise/entities/answer-attachment'
 import { AnswerAttachmentList } from '../../enterprise/entities/answer-attachment-list'
-import { AnswerAttachmentsRepository } from '../repositories/answer-attachments-repository'
-import { AnswersRepository } from '../repositories/answers-repository'
+import { AnswerAttachmentsRepository } from '../repositories/answer-attachments.repository'
+import { AnswersRepository } from '../repositories/answers.repository'
 
 interface EditAnswerUseCaseRequest {
 	authorId: string

@@ -4,7 +4,7 @@ import { Either, left, right } from '@/core/either'
 
 import { Encrypter } from '../cryptography/encrypter'
 import { HashComparer } from '../cryptography/hash-comparer'
-import { StudentsRepository } from '../repositories/students-repository'
+import { StudentsRepository } from '../repositories/students.repository'
 import { InvalidCredentialsError } from './errors/invalid-credentials-error'
 
 interface AuthenticateStudentUseCaseRequest {

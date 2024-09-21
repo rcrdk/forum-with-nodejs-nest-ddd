@@ -1,4 +1,5 @@
 <!-- TO_DO
+- Finish undone controlers presenters
 - Prisma Seed
 - Insomnia Export
 - About the project
@@ -17,6 +18,7 @@ I developed this project during my latest studies on Node lessons at [Rocketseat
 - [Insomnia](https://insomnia.rest/)
 - [Vitest](https://vitest.dev/)
 <!-- - Cloudflare R2 + AWS SDK -->
+<!-- - Redis -->
 
 ## 🖥️ Project
 <!-- This project was developed to practice the Domain-Driven Design (DDD) and Clean Architecture in Node.js. It was developed from the core domain, to base entities, to value objects, to relationships, to use cases, to subdomains, to domain events and unit tests. -->
