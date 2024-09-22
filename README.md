@@ -1,8 +1,3 @@
-<!-- TO_DO
-- Refresh token
-- About the project
--->
-
 # 💬 Forum API in NestJS with DDD and Clean Architecture
 I developed this project during my latest studies on Node lessons at [Rocketseat](https://www.rocketseat.com.br).
 
@@ -16,7 +11,11 @@ I developed this project during my latest studies on Node lessons at [Rocketseat
 - [Vitest](https://vitest.dev/)
 
 ## 🖥️ Project
-<!-- This project was developed to practice the Domain-Driven Design (DDD) and Clean Architecture in Node.js. It was developed from the core domain, to base entities, to value objects, to relationships, to use cases, to subdomains, to domain events and unit tests. -->
+This project was coded to practice the development of an API using NestJS following the patterns of Domain-Driven Design (DDD)/Clean Architecture along with other patterns such as factory pattern and repositories pattern. It was [previously developed](https://github.com/rcrdk/ddd-in-nodejs) the core, domain entities, value objects, relationships, use cases, subdomains, domain events and unit tests. Along with NestJS and all its structure and concepts, it was used AWS-SDK to manage file storage with Cloudflare R2, it was applied cache concept using Redis on some routes. 
+
+In this project it was ensured that all application works by running all test over testing simply with routes on Insomnia. It was applied unit tests and E2E tests. It was used Vitest along with supertest to make requests on tests. It was implemented GitHub Actions to run unit tests on push and E2E tests on pull requests. Prisma was used as ORM and client alongside with PostgreSQL database to mage with data. To make the authentication it was used JWT (JSON Web Token) to persist user information with security into the application.\
+
+To get started with the flow of the application, you can register a new user and authenticate, or use data seeded to database after running migrations. Then, you are able to post questions, answer questions, you are also able to comment, fetch, edit or delete them (check out on Insomnia below).
 
 ## ⚙️ Get started
 
