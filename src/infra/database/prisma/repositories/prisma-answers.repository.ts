@@ -7,6 +7,7 @@ import { AnswersRepository } from '@/domain/forum/application/repositories/answe
 import { Answer } from '@/domain/forum/enterprise/entities/answer'
 
 import { PrismaAnswerMapper } from '../mappers/prisma-answer.mapper'
+import { PrismaAnswerWithUserMapper } from '../mappers/prisma-answer-with-author.mapper'
 import { PrismaService } from '../prisma.service'
 
 @Injectable()
@@ -43,6 +44,28 @@ export class PrismaAnswersRepository implements AnswersRepository {
 		})
 
 		return answers.map((answer) => PrismaAnswerMapper.toDomain(answer))
+	}
+
+	async findManyByQuestionIdWithAuthor(
+		id: string,
+		{ page, perPage }: PaginationParams,
+	) {
+		const answers = await this.prisma.answer.findMany({
+			where: {
+				questionId: id,
+			},
+			include: {
+				author: true,
+				attachments: true,
+			},
+			orderBy: {
+				createdAt: 'desc',
+			},
+			take: perPage,
+			skip: (page - 1) * perPage,
+		})
+
+		return answers.map((answer) => PrismaAnswerWithUserMapper.toDomain(answer))
 	}
 
 	async create(answer: Answer) {

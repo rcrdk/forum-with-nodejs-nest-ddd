@@ -1,23 +1,31 @@
+/* eslint-disable prettier/prettier */
 import { makeAnswer } from 'test/factories/make-answer'
 import { makeAnswerAttachment } from 'test/factories/make-answer-attachment'
 import { InMemoryAnswerAttachmentsRepository } from 'test/repositories/in-memory-answer-attachments.repository'
 import { InMemoryAnswersRepository } from 'test/repositories/in-memory-answers.repository'
+import { InMemoryAttachementsRepository } from 'test/repositories/in-memory-attatchments.repository'
+import { InMemoryStudentsRepository } from 'test/repositories/in-memory-students.repository'
 
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { UnauthorizedError } from '@/core/errors/unauthorized-error'
 
 import { DeleteAnswerUseCase } from './delete-answer'
 
+let inMemoryAttachmentsRepository: InMemoryAttachementsRepository
+let inMemoryStudentsRepository: InMemoryStudentsRepository
 let inMemoryAnswerAttachmentsRepository: InMemoryAnswerAttachmentsRepository
 let inMemoryAnswersRepository: InMemoryAnswersRepository
 let sut: DeleteAnswerUseCase
 
 describe('delete answer by id', () => {
 	beforeEach(() => {
-		inMemoryAnswerAttachmentsRepository =
-			new InMemoryAnswerAttachmentsRepository()
+		inMemoryAttachmentsRepository = new InMemoryAttachementsRepository()
+		inMemoryStudentsRepository = new InMemoryStudentsRepository()
+		inMemoryAnswerAttachmentsRepository = new InMemoryAnswerAttachmentsRepository()
 		inMemoryAnswersRepository = new InMemoryAnswersRepository(
 			inMemoryAnswerAttachmentsRepository,
+			inMemoryStudentsRepository,
+			inMemoryAttachmentsRepository,
 		)
 		sut = new DeleteAnswerUseCase(inMemoryAnswersRepository)
 	})

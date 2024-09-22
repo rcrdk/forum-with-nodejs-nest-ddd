@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 
 import { Either, right } from '@/core/either'
 
-import { Question } from '../../enterprise/entities/question'
+import { RecentQuestions } from '../../enterprise/entities/value-objects/recent-questions'
 import { QuestionsRepository } from '../repositories/questions.repository'
 
 interface FetchRecentQuestionsUseCaseRequest {
@@ -13,7 +13,7 @@ interface FetchRecentQuestionsUseCaseRequest {
 type FetchRecentQuestionsUseCaseResponse = Either<
 	null,
 	{
-		questions: Question[]
+		questions: RecentQuestions[]
 	}
 >
 
@@ -25,7 +25,7 @@ export class FetchRecentQuestionsUseCase {
 		page,
 		perPage,
 	}: FetchRecentQuestionsUseCaseRequest): Promise<FetchRecentQuestionsUseCaseResponse> {
-		const questions = await this.questionsRepository.findManyRecent({
+		const questions = await this.questionsRepository.findManyRecentWithAuthor({
 			page,
 			perPage,
 		})

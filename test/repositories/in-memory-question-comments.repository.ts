@@ -20,10 +20,9 @@ export class InMemoryQuestionCommentsRepository implements QuestionCommentsRepos
 		return questionComment ?? null
 	}
 
-	async findManyByQuestionId(id: string, { page }: PaginationParams) {
-		const ITEMS_PER_PAGE = 20
-		const ITEMS_OFFSET_START = (page - 1) * ITEMS_PER_PAGE
-		const ITEMS_OFFSET_END = page * ITEMS_PER_PAGE
+	async findManyByQuestionId(id: string, { page, perPage }: PaginationParams) {
+		const ITEMS_OFFSET_START = (page - 1) * perPage
+		const ITEMS_OFFSET_END = page * perPage
 
 		const questionComments = this.items
 			.filter((item) => item.questionId.toString() === id)
@@ -32,10 +31,10 @@ export class InMemoryQuestionCommentsRepository implements QuestionCommentsRepos
 		return questionComments
 	}
 
-	async findManyByQuestionIdWithAuthor(id: string, { page }: PaginationParams) {
-		const ITEMS_PER_PAGE = 20
-		const ITEMS_OFFSET_START = (page - 1) * ITEMS_PER_PAGE
-		const ITEMS_OFFSET_END = page * ITEMS_PER_PAGE
+	// eslint-disable-next-line prettier/prettier
+	async findManyByQuestionIdWithAuthor(id: string, { page, perPage }: PaginationParams) {
+		const ITEMS_OFFSET_START = (page - 1) * perPage
+		const ITEMS_OFFSET_END = page * perPage
 
 		const questionComments = this.items
 			.filter((item) => item.questionId.toString() === id)

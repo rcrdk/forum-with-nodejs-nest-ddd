@@ -1,20 +1,28 @@
+/* eslint-disable prettier/prettier */
 import { InMemoryAnswerAttachmentsRepository } from 'test/repositories/in-memory-answer-attachments.repository'
 import { InMemoryAnswersRepository } from 'test/repositories/in-memory-answers.repository'
+import { InMemoryAttachementsRepository } from 'test/repositories/in-memory-attatchments.repository'
+import { InMemoryStudentsRepository } from 'test/repositories/in-memory-students.repository'
 
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 
 import { AnswerQuestionUseCase } from './answer-question'
 
+let inMemoryStudentsRepository: InMemoryStudentsRepository
+let inMemoryAttachmentsRepository: InMemoryAttachementsRepository
 let inMemoryAnswerAttachmentsRepository: InMemoryAnswerAttachmentsRepository
 let inMemoryAnswersRepository: InMemoryAnswersRepository
 let sut: AnswerQuestionUseCase
 
 describe('answer question', () => {
 	beforeEach(() => {
-		inMemoryAnswerAttachmentsRepository =
-			new InMemoryAnswerAttachmentsRepository()
+		inMemoryStudentsRepository = new InMemoryStudentsRepository()
+		inMemoryAttachmentsRepository = new InMemoryAttachementsRepository()
+		inMemoryAnswerAttachmentsRepository = new InMemoryAnswerAttachmentsRepository()
 		inMemoryAnswersRepository = new InMemoryAnswersRepository(
 			inMemoryAnswerAttachmentsRepository,
+			inMemoryStudentsRepository,
+			inMemoryAttachmentsRepository
 		)
 		sut = new AnswerQuestionUseCase(inMemoryAnswersRepository)
 	})

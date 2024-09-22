@@ -43,6 +43,7 @@ describe('fetch answer comments', () => {
 		const result = await sut.execute({
 			answerId: 'answer-01',
 			page: 1,
+			perPage: 20,
 		})
 
 		expect(result.isRight()).toBe(true)
@@ -81,6 +82,7 @@ describe('fetch answer comments', () => {
 		const result = await sut.execute({
 			answerId: 'answer-01',
 			page: 2,
+			perPage: 20,
 		})
 
 		expect(result.isRight()).toBe(true)

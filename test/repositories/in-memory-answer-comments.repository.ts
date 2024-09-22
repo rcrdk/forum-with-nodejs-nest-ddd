@@ -20,10 +20,9 @@ export class InMemoryAnswerCommentsRepository implements AnswerCommentsRepositor
 		return answerComment ?? null
 	}
 
-	async findManyByAnswerId(id: string, { page }: PaginationParams) {
-		const ITEMS_PER_PAGE = 20
-		const ITEMS_OFFSET_START = (page - 1) * ITEMS_PER_PAGE
-		const ITEMS_OFFSET_END = page * ITEMS_PER_PAGE
+	async findManyByAnswerId(id: string, { page, perPage }: PaginationParams) {
+		const ITEMS_OFFSET_START = (page - 1) * perPage
+		const ITEMS_OFFSET_END = page * perPage
 
 		const answerComments = this.items
 			.filter((item) => item.answerId.toString() === id)
@@ -32,10 +31,10 @@ export class InMemoryAnswerCommentsRepository implements AnswerCommentsRepositor
 		return answerComments
 	}
 
-	async findManyByAnswerIdWithAuthor(id: string, { page }: PaginationParams) {
-		const ITEMS_PER_PAGE = 20
-		const ITEMS_OFFSET_START = (page - 1) * ITEMS_PER_PAGE
-		const ITEMS_OFFSET_END = page * ITEMS_PER_PAGE
+	// eslint-disable-next-line prettier/prettier
+	async findManyByAnswerIdWithAuthor(id: string, { page, perPage }: PaginationParams) {
+		const ITEMS_OFFSET_START = (page - 1) * perPage
+		const ITEMS_OFFSET_END = page * perPage
 
 		const answerComments = this.items
 			.filter((item) => item.answerId.toString() === id)

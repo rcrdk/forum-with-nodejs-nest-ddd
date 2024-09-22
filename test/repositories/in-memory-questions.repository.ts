@@ -3,6 +3,7 @@ import { PaginationParams } from '@/core/repositories/pagination-params'
 import { QuestionsRepository } from '@/domain/forum/application/repositories/questions.repository'
 import { Question } from '@/domain/forum/enterprise/entities/question'
 import { QuestionDetails } from '@/domain/forum/enterprise/entities/value-objects/question-details'
+import { RecentQuestions } from '@/domain/forum/enterprise/entities/value-objects/recent-questions'
 
 import { InMemoryAttachementsRepository } from './in-memory-attatchments.repository'
 import { InMemoryQuestionAttachmentsRepository } from './in-memory-question-attachments.repository'
@@ -80,14 +81,44 @@ export class InMemoryQuestionsRepository implements QuestionsRepository {
 		})
 	}
 
-	async findManyRecent({ page }: PaginationParams) {
-		const ITEMS_PER_PAGE = 20
-		const ITEMS_OFFSET_START = (page - 1) * ITEMS_PER_PAGE
-		const ITEMS_OFFSET_END = page * ITEMS_PER_PAGE
+	async findManyRecent({ page, perPage }: PaginationParams) {
+		const ITEMS_OFFSET_START = (page - 1) * perPage
+		const ITEMS_OFFSET_END = page * perPage
 
 		const questions = this.items
 			.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
 			.slice(ITEMS_OFFSET_START, ITEMS_OFFSET_END)
+
+		return questions
+	}
+
+	async findManyRecentWithAuthor({ page, perPage }: PaginationParams) {
+		const ITEMS_OFFSET_START = (page - 1) * perPage
+		const ITEMS_OFFSET_END = page * perPage
+
+		const questions = this.items
+			.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+			.slice(ITEMS_OFFSET_START, ITEMS_OFFSET_END)
+			.map((question) => {
+				const author = this.studentsRepository.items.find((student) =>
+					student.id.equals(question.authorId),
+				)
+
+				if (!author) {
+					throw new Error(
+						`Author with id "${question.authorId.toString()}" does not exists.`,
+					)
+				}
+				return RecentQuestions.create({
+					questionId: question.id,
+					authorId: question.authorId,
+					title: question.title,
+					slug: question.slug,
+					createdAt: question.createdAt,
+					updatedAt: question.updatedAt,
+					author: author?.name,
+				})
+			})
 
 		return questions
 	}

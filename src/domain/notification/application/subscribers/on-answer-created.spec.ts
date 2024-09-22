@@ -36,7 +36,11 @@ describe('on answer created', () => {
 			inMemoryStudentsRepository
 		)
 		inMemoryAnswerAttachmentsRepository = new InMemoryAnswerAttachmentsRepository()
-		inMemoryAnswersRepository = new InMemoryAnswersRepository(inMemoryAnswerAttachmentsRepository)
+		inMemoryAnswersRepository = new InMemoryAnswersRepository(
+			inMemoryAnswerAttachmentsRepository,
+			inMemoryStudentsRepository,
+			inMemoryAttachmentsRepository,
+		)
 		inMemoryNotificationsRepository = new InMemoryNotificationsRepository()
 		sendNotificationUseCase = new SendNotificationUseCase(inMemoryNotificationsRepository)
 

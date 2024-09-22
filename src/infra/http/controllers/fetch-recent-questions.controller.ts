@@ -11,7 +11,7 @@ import { z } from 'zod'
 import { FetchRecentQuestionsUseCase } from '@/domain/forum/application/use-cases/fetch-recent-questions'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation.pipe'
 
-import { QuestionPresenter } from '../presenters/question.presenter'
+import { RecentQuestionsPresenter } from '../presenters/recent-questions.presenter'
 
 const pageQueryParamSchema = z.string().optional().default('1').transform(Number).pipe(z.number().min(1))
 const perPageQueryParamSchema = z.string().optional().default('20').transform(Number).pipe(z.number().min(1))
@@ -45,7 +45,7 @@ export class FetchRecentQuestionsController {
 
 		return {
 			questions: questions.map((question) =>
-				QuestionPresenter.toHttp(question),
+				RecentQuestionsPresenter.toHttp(question),
 			),
 		}
 	}

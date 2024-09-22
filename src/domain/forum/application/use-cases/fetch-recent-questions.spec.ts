@@ -1,4 +1,5 @@
 import { makeQuestion } from 'test/factories/make-question'
+import { makeStudent } from 'test/factories/make-student'
 import { InMemoryAttachementsRepository } from 'test/repositories/in-memory-attatchments.repository'
 import { InMemoryQuestionAttachmentsRepository } from 'test/repositories/in-memory-question-attachments.repository'
 import { InMemoryQuestionsRepository } from 'test/repositories/in-memory-questions.repository'
@@ -28,26 +29,33 @@ describe('fetch recent questions', () => {
 	})
 
 	it('should be able to fetch recent questions', async () => {
+		const student = makeStudent({ name: 'John Doe' })
+		inMemoryStudentsRepository.items.push(student)
+
 		await inMemoryQuestionsRepository.create(
 			makeQuestion({
 				createdAt: new Date(2024, 8, 20),
+				authorId: student.id,
 			}),
 		)
 
 		await inMemoryQuestionsRepository.create(
 			makeQuestion({
 				createdAt: new Date(2024, 8, 18),
+				authorId: student.id,
 			}),
 		)
 
 		await inMemoryQuestionsRepository.create(
 			makeQuestion({
 				createdAt: new Date(2024, 8, 23),
+				authorId: student.id,
 			}),
 		)
 
 		const result = await sut.execute({
 			page: 1,
+			perPage: 20,
 		})
 
 		expect(result.isRight()).toBe(true)
@@ -65,12 +73,18 @@ describe('fetch recent questions', () => {
 	})
 
 	it('should be able to fetch paginated recent questions', async () => {
+		const student = makeStudent({ name: 'John Doe' })
+		inMemoryStudentsRepository.items.push(student)
+
 		for (let i = 1; i <= 22; i++) {
-			await inMemoryQuestionsRepository.create(makeQuestion())
+			await inMemoryQuestionsRepository.create(
+				makeQuestion({ authorId: student.id }),
+			)
 		}
 
 		const result = await sut.execute({
 			page: 2,
+			perPage: 20,
 		})
 
 		expect(result.isRight()).toBe(true)

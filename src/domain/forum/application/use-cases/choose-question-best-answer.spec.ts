@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { makeAnswer } from 'test/factories/make-answer'
 import { makeQuestion } from 'test/factories/make-question'
 import { InMemoryAnswerAttachmentsRepository } from 'test/repositories/in-memory-answer-attachments.repository'
@@ -22,7 +23,6 @@ let sut: ChooseQuestionBestAnswerUseCase
 
 describe('choose answer best answer', () => {
 	beforeEach(() => {
-		// eslint-disable-next-line prettier/prettier
 		inMemoryQuestionAttachmentsRepository = new InMemoryQuestionAttachmentsRepository()
 		inMemoryAttachmentsRepository = new InMemoryAttachementsRepository()
 		inMemoryStudentsRepository = new InMemoryStudentsRepository()
@@ -31,10 +31,12 @@ describe('choose answer best answer', () => {
 			inMemoryAttachmentsRepository,
 			inMemoryStudentsRepository,
 		)
-		// eslint-disable-next-line prettier/prettier
+		
 		inMemoryAnswerAttachmentsRepository = new InMemoryAnswerAttachmentsRepository()
 		inMemoryAnswersRepository = new InMemoryAnswersRepository(
 			inMemoryAnswerAttachmentsRepository,
+			inMemoryStudentsRepository,
+			inMemoryAttachmentsRepository,
 		)
 
 		sut = new ChooseQuestionBestAnswerUseCase(

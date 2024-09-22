@@ -1,14 +1,20 @@
 import { DomainEvents } from '@/core/events/domain-events'
 import { PaginationParams } from '@/core/repositories/pagination-params'
-import { AnswerAttachmentsRepository } from '@/domain/forum/application/repositories/answer-attachments.repository'
 import { AnswersRepository } from '@/domain/forum/application/repositories/answers.repository'
 import { Answer } from '@/domain/forum/enterprise/entities/answer'
+import { AnswerWithAuthor } from '@/domain/forum/enterprise/entities/value-objects/answer-with-author'
+
+import { InMemoryAnswerAttachmentsRepository } from './in-memory-answer-attachments.repository'
+import { InMemoryAttachementsRepository } from './in-memory-attatchments.repository'
+import { InMemoryStudentsRepository } from './in-memory-students.repository'
 
 export class InMemoryAnswersRepository implements AnswersRepository {
 	public items: Answer[] = []
 
 	constructor(
-		private answerAttachmentsRepository: AnswerAttachmentsRepository,
+		private answerAttachmentsRepository: InMemoryAnswerAttachmentsRepository,
+		private studentsRepository: InMemoryStudentsRepository,
+		private attachmentsRepository: InMemoryAttachementsRepository,
 	) {}
 
 	async findById(id: string) {
@@ -17,14 +23,64 @@ export class InMemoryAnswersRepository implements AnswersRepository {
 		return answer ?? null
 	}
 
-	async findManyByQuestionId(id: string, { page }: PaginationParams) {
-		const ITEMS_PER_PAGE = 20
-		const ITEMS_OFFSET_START = (page - 1) * ITEMS_PER_PAGE
-		const ITEMS_OFFSET_END = page * ITEMS_PER_PAGE
+	async findManyByQuestionId(id: string, { page, perPage }: PaginationParams) {
+		const ITEMS_OFFSET_START = (page - 1) * perPage
+		const ITEMS_OFFSET_END = page * perPage
 
 		const answers = this.items
 			.filter((item) => item.questionId.toString() === id)
 			.slice(ITEMS_OFFSET_START, ITEMS_OFFSET_END)
+
+		return answers
+	}
+
+	// eslint-disable-next-line prettier/prettier
+	async findManyByQuestionIdWithAuthor(id: string, { page, perPage }: PaginationParams) {
+		const ITEMS_OFFSET_START = (page - 1) * perPage
+		const ITEMS_OFFSET_END = page * perPage
+
+		const answers = this.items
+			.filter((item) => item.questionId.toString() === id)
+			.slice(ITEMS_OFFSET_START, ITEMS_OFFSET_END)
+			.map((answer) => {
+				const author = this.studentsRepository.items.find((student) =>
+					student.id.equals(answer.authorId),
+				)
+
+				if (!author) {
+					throw new Error(
+						`Author with id "${answer.authorId.toString()}" does not exists.`,
+					)
+				}
+
+				const answerAttachments = this.answerAttachmentsRepository.items.filter(
+					(item) => item.answerId.equals(answer.id),
+				)
+
+				const attachments = answerAttachments.map((item) => {
+					const attachment = this.attachmentsRepository.items.find(
+						(attachment) => attachment.id.equals(item.attachmentId),
+					)
+
+					if (!attachment) {
+						throw new Error(
+							`Attachment with id "${item.attachmentId.toString()}" does not exists.`,
+						)
+					}
+
+					return attachment
+				})
+
+				return AnswerWithAuthor.create({
+					answerId: answer.id,
+					authorId: answer.authorId,
+					content: answer.content,
+					createdAt: answer.createdAt,
+					updatedAt: answer.updatedAt,
+					author: author?.name,
+					attachments,
+				})
+			})
 
 		return answers
 	}

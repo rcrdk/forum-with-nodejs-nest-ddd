@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { makeAnswer } from 'test/factories/make-answer'
 import { makeQuestion } from 'test/factories/make-question'
 import { InMemoryAnswerAttachmentsRepository } from 'test/repositories/in-memory-answer-attachments.repository'
@@ -36,17 +37,17 @@ describe('on question best answer', () => {
 	beforeEach(() => {
 		inMemoryAttachmentsRepository = new InMemoryAttachementsRepository()
 		inMemoryStudentsRepository = new InMemoryStudentsRepository()
-		// eslint-disable-next-line prettier/prettier
 		inMemoryQuestionsAttachmentsRepository = new InMemoryQuestionAttachmentsRepository()
 		inMemoryQuestionsRepository = new InMemoryQuestionsRepository(
 			inMemoryQuestionsAttachmentsRepository,
 			inMemoryAttachmentsRepository,
 			inMemoryStudentsRepository,
 		)
-		// eslint-disable-next-line prettier/prettier
 		inMemoryAnswerAttachmentsRepository = new InMemoryAnswerAttachmentsRepository()
 		inMemoryAnswersRepository = new InMemoryAnswersRepository(
 			inMemoryAnswerAttachmentsRepository,
+			inMemoryStudentsRepository,
+			inMemoryAttachmentsRepository,
 		)
 		inMemoryNotificationsRepository = new InMemoryNotificationsRepository()
 		sendNotificationUseCase = new SendNotificationUseCase(

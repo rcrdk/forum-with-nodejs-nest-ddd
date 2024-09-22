@@ -12,7 +12,7 @@ import { z } from 'zod'
 import { FetchQuestionAnswersUseCase } from '@/domain/forum/application/use-cases/fetch-question-answers'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation.pipe'
 
-import { AnswerPresenter } from '../presenters/answer.presenter'
+import { AnswerWithAuhtorPresenter } from '../presenters/answer-with-author.presenter'
 
 const pageQueryParamSchema = z.string().optional().default('1').transform(Number).pipe(z.number().min(1))
 const perPageQueryParamSchema = z.string().optional().default('20').transform(Number).pipe(z.number().min(1))
@@ -47,7 +47,7 @@ export class FetchQuestionAnswersController {
 		const { answers } = result.value
 
 		return {
-			answers: answers.map((answer) => AnswerPresenter.toHttp(answer)),
+			answers: answers.map((answer) => AnswerWithAuhtorPresenter.toHttp(answer)),
 		}
 	}
 }

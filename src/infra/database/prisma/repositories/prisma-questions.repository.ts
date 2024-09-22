@@ -9,6 +9,7 @@ import { CacheRepository } from '@/infra/cache/cache.repository'
 
 import { PrismaQuestionMapper } from '../mappers/prisma-question.mapper'
 import { PrismaQuestionDetailsMapper } from '../mappers/prisma-question-details.mapper'
+import { PrismaRecentQuestionsMapper } from '../mappers/prisma-recent-questions.mapper'
 import { PrismaService } from '../prisma.service'
 
 @Injectable()
@@ -87,6 +88,23 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
 		})
 
 		return questions.map((question) => PrismaQuestionMapper.toDomain(question))
+	}
+
+	async findManyRecentWithAuthor({ page, perPage }: PaginationParams) {
+		const questions = await this.prisma.question.findMany({
+			orderBy: {
+				createdAt: 'desc',
+			},
+			include: {
+				author: true,
+			},
+			take: perPage,
+			skip: (page - 1) * perPage,
+		})
+
+		return questions.map((question) =>
+			PrismaRecentQuestionsMapper.toDomain(question),
+		)
 	}
 
 	async create(question: Question) {
