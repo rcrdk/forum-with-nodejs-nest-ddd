@@ -7,6 +7,7 @@ import { QuestionsRepository } from '../repositories/questions.repository'
 
 interface FetchRecentQuestionsUseCaseRequest {
 	page: number
+	perPage: number
 }
 
 type FetchRecentQuestionsUseCaseResponse = Either<
@@ -22,9 +23,11 @@ export class FetchRecentQuestionsUseCase {
 
 	async execute({
 		page,
+		perPage,
 	}: FetchRecentQuestionsUseCaseRequest): Promise<FetchRecentQuestionsUseCaseResponse> {
 		const questions = await this.questionsRepository.findManyRecent({
 			page,
+			perPage,
 		})
 
 		return right({ questions })

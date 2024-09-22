@@ -8,6 +8,7 @@ import { QuestionCommentsRepository } from '../repositories/question-comments.re
 interface FetchQuestionCommentsUseCaseRequest {
 	questionId: string
 	page: number
+	perPage: number
 }
 
 type FetchQuestionCommentsUseCaseResponse = Either<
@@ -24,12 +25,14 @@ export class FetchQuestionCommentsUseCase {
 	async execute({
 		questionId,
 		page,
+		perPage,
 	}: FetchQuestionCommentsUseCaseRequest): Promise<FetchQuestionCommentsUseCaseResponse> {
 		const comments =
 			await this.questionCommentsRepository.findManyByQuestionIdWithAuthor(
 				questionId,
 				{
 					page,
+					perPage,
 				},
 			)
 

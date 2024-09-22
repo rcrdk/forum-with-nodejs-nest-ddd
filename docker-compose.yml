@@ -10,8 +10,8 @@ services:
       - POSTGRESQL_USERNAME=docker
       - POSTGRESQL_PASSWORD=docker
       - POSTGRESQL_DATABASE=nest-clean
-    volumes:
-      - ./data/pg:/data/postgres
+    # volumes:
+    #   - ./data/pg:/data/postgres
   
   cache:
     container_name: nest-clean-cache
@@ -20,7 +20,7 @@ services:
       - 6379:6379
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
-    volumes:
-      - ./data/redis:/data
+    # volumes:
+    #   - ./data/redis:/data
     
   

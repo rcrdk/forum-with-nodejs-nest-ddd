@@ -28,10 +28,7 @@ export class PrismaQuestionCommentsRepository
 		return PrismaQuestionCommentMapper.toDomain(comment)
 	}
 
-	async findManyByQuestionId(id: string, { page }: PaginationParams) {
-		const ITEMS_PER_PAGE = 20
-		const ITEMS_OFFSET_START = (page - 1) * ITEMS_PER_PAGE
-
+	async findManyByQuestionId(id: string, { page, perPage }: PaginationParams) {
 		const questions = await this.prisma.comment.findMany({
 			where: {
 				questionId: id,
@@ -39,8 +36,8 @@ export class PrismaQuestionCommentsRepository
 			orderBy: {
 				createdAt: 'desc',
 			},
-			take: ITEMS_PER_PAGE,
-			skip: ITEMS_OFFSET_START,
+			take: perPage,
+			skip: (page - 1) * perPage,
 		})
 
 		return questions.map((comment) =>
@@ -48,10 +45,10 @@ export class PrismaQuestionCommentsRepository
 		)
 	}
 
-	async findManyByQuestionIdWithAuthor(id: string, { page }: PaginationParams) {
-		const ITEMS_PER_PAGE = 20
-		const ITEMS_OFFSET_START = (page - 1) * ITEMS_PER_PAGE
-
+	async findManyByQuestionIdWithAuthor(
+		id: string,
+		{ page, perPage }: PaginationParams,
+	) {
 		const questions = await this.prisma.comment.findMany({
 			where: {
 				questionId: id,
@@ -62,8 +59,8 @@ export class PrismaQuestionCommentsRepository
 			orderBy: {
 				createdAt: 'desc',
 			},
-			take: ITEMS_PER_PAGE,
-			skip: ITEMS_OFFSET_START,
+			take: perPage,
+			skip: (page - 1) * perPage,
 		})
 
 		return questions.map((comment) =>

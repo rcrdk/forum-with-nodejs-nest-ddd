@@ -37,8 +37,8 @@ model Question {
     authorId     String    @map("author_id")
     bestAnswerId String?   @unique @map("best_answer_id")
 
-    author     User    @relation(fields: [authorId], references: [id])
-    bestAnswer Answer? @relation("bestAnswer", fields: [bestAnswerId], references: [id])
+    author     User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+    bestAnswer Answer? @relation("bestAnswer", fields: [bestAnswerId], references: [id], onDelete: SetNull)
 
     answers     Answer[]
     comments    Comment[]
@@ -55,9 +55,9 @@ model Answer {
     authorId   String    @map("author_id")
     questionId String    @map("question_id")
 
-    author       User      @relation(fields: [authorId], references: [id])
+    author       User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+    question     Question  @relation(fields: [questionId], references: [id], onDelete: Cascade)
     bestAnswerOn Question? @relation("bestAnswer")
-    question     Question  @relation(fields: [questionId], references: [id])
 
     comments    Comment[]
     attachments Attachment[]
@@ -74,10 +74,10 @@ model Comment {
     questionId String?   @map("question_id")
     answerId   String?   @map("answer_id")
 
-    question Question? @relation(fields: [questionId], references: [id])
-    answer   Answer?   @relation(fields: [answerId], references: [id])
+    question Question? @relation(fields: [questionId], references: [id], onDelete: Cascade)
+    answer   Answer?   @relation(fields: [answerId], references: [id], onDelete: Cascade)
 
-    author User @relation(fields: [authorId], references: [id])
+    author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
     @@map("comments")
 }
@@ -89,8 +89,8 @@ model Attachment {
     questionId String? @map("question_id")
     answerId   String? @map("answer_id")
 
-    question Question? @relation(fields: [questionId], references: [id])
-    answer   Answer?   @relation(fields: [answerId], references: [id])
+    question Question? @relation(fields: [questionId], references: [id], onDelete: Cascade)
+    answer   Answer?   @relation(fields: [answerId], references: [id], onDelete: Cascade)
 
     @@map("attachments")
 }
@@ -103,7 +103,7 @@ model Notification {
     createdAt   DateTime  @default(now()) @map("created_at")
     recipientId String    @map("recipient_id")
 
-    recipient User @relation(fields: [recipientId], references: [id])
+    recipient User @relation(fields: [recipientId], references: [id], onDelete: Cascade)
 
     @@map("notifications")
 }

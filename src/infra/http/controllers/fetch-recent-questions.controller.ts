@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
 	BadRequestException,
 	Controller,
@@ -12,16 +13,14 @@ import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation.pipe'
 
 import { QuestionPresenter } from '../presenters/question.presenter'
 
-const pageQueryParamSchema = z
-	.string()
-	.optional()
-	.default('1')
-	.transform(Number)
-	.pipe(z.number().min(1))
+const pageQueryParamSchema = z.string().optional().default('1').transform(Number).pipe(z.number().min(1))
+const perPageQueryParamSchema = z.string().optional().default('20').transform(Number).pipe(z.number().min(1))
 
-const queryValidationPipe = new ZodValidationPipe(pageQueryParamSchema)
+const pageQueryParamValidationPipe = new ZodValidationPipe(pageQueryParamSchema)
+const perPageQueryParamValidationPipe = new ZodValidationPipe(perPageQueryParamSchema)
 
 type PageQueryParamSchema = z.infer<typeof pageQueryParamSchema>
+type PerPageQueryParamSchema = z.infer<typeof perPageQueryParamSchema>
 
 @Controller('/questions')
 export class FetchRecentQuestionsController {
@@ -29,9 +28,13 @@ export class FetchRecentQuestionsController {
 
 	@Get()
 	@HttpCode(200)
-	async handle(@Query('page', queryValidationPipe) page: PageQueryParamSchema) {
+	async handle(
+		@Query('page', pageQueryParamValidationPipe) page: PageQueryParamSchema,
+		@Query('perPage', perPageQueryParamValidationPipe) perPage: PerPageQueryParamSchema,
+	) {
 		const result = await this.fetchRecentQuestions.execute({
 			page,
+			perPage,
 		})
 
 		if (result.isLeft()) {

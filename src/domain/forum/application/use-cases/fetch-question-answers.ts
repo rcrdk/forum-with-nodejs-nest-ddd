@@ -8,6 +8,7 @@ import { AnswersRepository } from '../repositories/answers.repository'
 interface FetchQuestionAnswersUseCaseRequest {
 	questionId: string
 	page: number
+	perPage: number
 }
 
 type FetchQuestionAnswersUseCaseResponse = Either<
@@ -24,11 +25,13 @@ export class FetchQuestionAnswersUseCase {
 	async execute({
 		questionId,
 		page,
+		perPage,
 	}: FetchQuestionAnswersUseCaseRequest): Promise<FetchQuestionAnswersUseCaseResponse> {
 		const answers = await this.answersRepository.findManyByQuestionId(
 			questionId,
 			{
 				page,
+				perPage,
 			},
 		)
 

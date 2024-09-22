@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
 	BadRequestException,
 	Controller,
@@ -13,16 +14,14 @@ import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation.pipe'
 
 import { CommentWithAuthorPresenter } from '../presenters/comment-with-author.presenter'
 
-const pageQueryParamSchema = z
-	.string()
-	.optional()
-	.default('1')
-	.transform(Number)
-	.pipe(z.number().min(1))
+const pageQueryParamSchema = z.string().optional().default('1').transform(Number).pipe(z.number().min(1))
+const perPageQueryParamSchema = z.string().optional().default('20').transform(Number).pipe(z.number().min(1))
 
-const queryValidationPipe = new ZodValidationPipe(pageQueryParamSchema)
+const pageQueryParamValidationPipe = new ZodValidationPipe(pageQueryParamSchema)
+const perPageQueryParamValidationPipe = new ZodValidationPipe(perPageQueryParamSchema)
 
 type PageQueryParamSchema = z.infer<typeof pageQueryParamSchema>
+type PerPageQueryParamSchema = z.infer<typeof perPageQueryParamSchema>
 
 @Controller('/answers/:answerId/comments')
 export class FetchAnswerCommentsController {
@@ -31,11 +30,13 @@ export class FetchAnswerCommentsController {
 	@Get()
 	@HttpCode(200)
 	async handle(
-		@Query('page', queryValidationPipe) page: PageQueryParamSchema,
+		@Query('page', pageQueryParamValidationPipe) page: PageQueryParamSchema,
+		@Query('perPage', perPageQueryParamValidationPipe) perPage: PerPageQueryParamSchema,
 		@Param('answerId') answerId: string,
 	) {
 		const result = await this.fetchAnswerComments.execute({
 			page,
+			perPage,
 			answerId,
 		})
 

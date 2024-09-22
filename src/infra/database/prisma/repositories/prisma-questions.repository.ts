@@ -77,16 +77,13 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
 		return PrismaQuestionDetailsMapper.toDomain(question)
 	}
 
-	async findManyRecent({ page }: PaginationParams) {
-		const ITEMS_PER_PAGE = 20
-		const ITEMS_OFFSET_START = (page - 1) * ITEMS_PER_PAGE
-
+	async findManyRecent({ page, perPage }: PaginationParams) {
 		const questions = await this.prisma.question.findMany({
 			orderBy: {
 				createdAt: 'desc',
 			},
-			take: ITEMS_PER_PAGE,
-			skip: ITEMS_OFFSET_START,
+			take: perPage,
+			skip: (page - 1) * perPage,
 		})
 
 		return questions.map((question) => PrismaQuestionMapper.toDomain(question))
