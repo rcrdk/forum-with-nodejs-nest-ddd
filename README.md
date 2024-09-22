@@ -1,7 +1,6 @@
 <!-- TO_DO
+- Refresh token
 - About the project
-- add tests on github worflow [commit, pr]
-- prepare for ci
 -->
 
 # 💬 Forum API in NestJS with DDD and Clean Architecture
