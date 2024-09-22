@@ -4,11 +4,11 @@ import {
 	Controller,
 	HttpCode,
 	Post,
-	// Res,
+	Res,
 	UnauthorizedException,
 	UsePipes,
 } from '@nestjs/common'
-// import { Response } from 'express'
+import { Response } from 'express'
 import { z } from 'zod'
 
 import { AuthenticateStudentUseCase } from '@/domain/forum/application/use-cases/authenticate-student'
@@ -33,7 +33,7 @@ export class AuthenticateController {
 	@UsePipes(new ZodValidationPipe(authenticateBodySchema))
 	async handle(
 		@Body() body: AuthenticateBodySchema,
-		// @Res({ passthrough: true }) res: Response,
+		@Res({ passthrough: true }) res: Response,
 	) {
 		const { email, password } = body
 
@@ -55,10 +55,14 @@ export class AuthenticateController {
 
 		const { accessToken } = result.value
 
-		// res.cookie('Authentication', accessToken, { httpOnly: true })
-
-		return {
-			access_token: accessToken,
-		}
+		res
+			.cookie('Authentication', accessToken, {
+				httpOnly: true,
+				secure: true,
+				signed: true,
+			})
+			.send({
+				access_token: accessToken,
+			})
 	}
 }

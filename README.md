@@ -1,9 +1,4 @@
 <!-- TO_DO
-- Cookie token / Refresh token
-- Insomnia Routes e Export
-- Finish undone controlers presenters
-  - recent questions
-  - question answers
 - About the project
 - add tests on github worflow [commit, pr]
 - prepare for ci
@@ -29,8 +24,11 @@ I developed this project during my latest studies on Node lessons at [Rocketseat
 ### 1️⃣ Install dependencies and run services:
 ```shell
 npm i
+
 docker compose up -d
-npx prisma migrate dev
+
+npx prisma migrate dev # seeds will run along
+npx prisma studio
 ```
 
 ---
